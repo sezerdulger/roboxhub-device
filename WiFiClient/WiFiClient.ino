@@ -8,10 +8,10 @@
 
 #include <ESP8266WiFi.h>
 
-const char* ssid     = "sezer";
+const char* ssid     = "Sezer";
 const char* password = "RAPtor1234";
 
-const char* host = "192.168.137.1";
+const char* host = "192.168.1.21";
 
 void setup() {
   Serial.begin(115200);
@@ -59,7 +59,7 @@ void loop() {
   }
   
   // We now create a URI for the request
-  String url = "http://192.168.137.1:8080/api/1.0/test";
+  String url = "http://192.168.1.21:8080/api/1.0/test";
   
   Serial.print("Requesting URL: ");
   Serial.println(url);
