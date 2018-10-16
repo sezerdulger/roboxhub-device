@@ -32,10 +32,10 @@ static const uint8_t D8   = 15;
 static const uint8_t D9   = 3;
 static const uint8_t D10  = 1;
 
-#define DHTPIN            D1
+#define DHTPIN            D4
 #define DHTTYPE           DHT11
 
-DHT_Unified dht(DHTPIN, DHTTYPE);
+DHT_Unified dht4(D4, DHTTYPE);
 
 uint32_t delayMS;
 
@@ -63,12 +63,22 @@ ADC_MODE(ADC_VCC);
 void setup() {
 
   Serial.begin(115200);
-  dht.begin();
+  dht4.begin();
+  /*dht1.begin();
+  dht2.begin();
+  dht3.begin();
+  dht4.begin();
+  dht5.begin();
+  dht6.begin();
+  dht7.begin();
+  dht8.begin();
+  dht9.begin();
+  dht10.begin();*/
   
   delay(10);
   
   sensor_t sensor;
-  dht.temperature().getSensor(&sensor);
+  dht4.temperature().getSensor(&sensor);
    Serial.println("------------------------------------");
   Serial.println("Temperature");
   Serial.print  ("Sensor:       "); Serial.println(sensor.name);
@@ -79,7 +89,7 @@ void setup() {
   Serial.print  ("Resolution:   "); Serial.print(sensor.resolution); Serial.println(" *C");  
   Serial.println("------------------------------------");
   // Print humidity sensor details.
-  dht.humidity().getSensor(&sensor);
+  dht4.humidity().getSensor(&sensor);
   Serial.println("------------------------------------");
   Serial.println("Humidity");
   Serial.print  ("Sensor:       "); Serial.println(sensor.name);
@@ -118,7 +128,24 @@ void setup() {
 }
 
 void loop() {
-  uint16 batteryStatus = readvdd33();
+ sendData(dht4, "dht4");
+ /*sendData(dht1, "dht1");
+ sendData(dht2, "dht2");
+ sendData(dht3, "dht3");
+ sendData(dht4, "dht4");
+ sendData(dht5, "dht5");
+ sendData(dht6, "dht6");
+ sendData(dht7, "dht7");
+ sendData(dht8, "dht8");
+ sendData(dht9, "dht9");
+ sendData(dht10, "dht10");*/
+ 
+ 
+  delay(10000);
+}
+
+void sendData(DHT_Unified dht, String dht_id) {
+ uint16 batteryStatus = readvdd33();
   float temperature;
   float humidity;
   Serial.println("batteryStatus ");
@@ -164,16 +191,17 @@ void loop() {
     //http.begin(exacturl);
     http.addHeader("Content-Type", "application/json");
     http.addHeader("Accept", "application/json");
-    http.addHeader("Authorization", "Basic c2V6ZXI6MTIzNDU2Nzg=");
+    http.addHeader("Authorization", "Basic ZXJoYW46MTIzNDU2Nzg=");
     http.addHeader("Content-Length", String(message.length()));
 
     StaticJsonBuffer<200> jsonBuffer;
     JsonObject& root = jsonBuffer.createObject();
-    root["name"] = "sezer";
+    root["name"] = "erhan";
+    root["dht_id"]=dht_id;
     root["data"] = jsonBuffer.createObject();
     root["data"]["temp"]=temperature;
     root["data"]["humidity"]=humidity;
-    root["data"]["device_id"]="sezer";
+    root["data"]["device_id"]="erhan";
     root["data"]["battery"]=batteryStatus;
     root["data"]["battery2"]=ESP.getVcc();
 
@@ -194,7 +222,6 @@ void loop() {
     udp.write("hi");
     udp.endPacket();
   }
-  delay(10000);
 }
 
 void handleBody() {

@@ -11,7 +11,7 @@
 const char* ssid     = "Sezer";
 const char* password = "RAPtor1234";
 
-const char* host = "192.168.1.21";
+const char* host = "192.168.1.22";
 
 void setup() {
   Serial.begin(115200);
